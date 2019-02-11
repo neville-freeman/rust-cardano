@@ -1,4 +1,5 @@
 use futures::Future;
+use futures::future::Executor;
 use tokio_core::reactor::Core;
 
 use network::api::{Api, BlockRef};
@@ -26,7 +27,7 @@ impl NetworkCore {
         match connecting.wait() {
             Ok((connection, handle)) => {
                 let mut core = Core::new().unwrap();
-                core.run(connection);
+                core.execute(connection).unwrap();
                 Ok(NetworkCore { handle, core })
             }
             Err(_err) => unimplemented!(),
